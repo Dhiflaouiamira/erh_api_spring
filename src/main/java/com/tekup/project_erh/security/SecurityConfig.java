@@ -2,7 +2,6 @@ package com.tekup.project_erh.security;
 
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,46 +33,42 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private JwtRequestFilter jwtRequestFilter;
 	@Autowired
 	private UserServices userServices;
-	
-	
+
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(myUserDetailsService);
 	}
-	
+
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
+
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return (UserDetailsService) email -> {
 			Optional<User> user = userServices.findUserByEmail(email);
-			if(user.isEmpty()) {
-				throw new UsernameNotFoundException("No user found with email"+email);
+			if (user.isEmpty()) {
+				throw new UsernameNotFoundException("No user found with email" + email);
 			}
 			return user.get();
 		};
 	}
-	
-	
+
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder);
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable()
-		.authorizeRequests().antMatchers("/api/subscription/login","/api/**","/api/*/*", "/api/subscription/register","/api/entreprises/*"). permitAll()
-		.anyRequest().authenticated().and()
-		.exceptionHandling().and().sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.cors().and().csrf().disable().authorizeRequests()
+				.antMatchers("/api/subscription/login", "/api/**", "/api/*/*", "/api/subscription/register",
+						"/api/entreprises/*", "/api/users/*", "/api-docs","/api/users/{id}")
+				.permitAll().anyRequest().authenticated().and().exceptionHandling().and().sessionManagement();
+				//.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
-	
-	
+
 }

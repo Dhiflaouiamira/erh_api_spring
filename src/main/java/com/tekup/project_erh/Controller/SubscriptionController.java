@@ -43,7 +43,7 @@ public class SubscriptionController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody User user) {
-		Role role = roleRepository.findRoleByLibelle("Client");
+		Role role = roleRepository.findRoleByLibelle("empolyee");
 		user.setRole(role);
 		
 		if(userServices.userExist(user.getEmail())) {

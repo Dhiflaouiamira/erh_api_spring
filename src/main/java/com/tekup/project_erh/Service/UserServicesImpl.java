@@ -2,6 +2,7 @@ package com.tekup.project_erh.Service;
 
 import java.util.List;
 
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.tekup.project_erh.model.User;
 import com.tekup.project_erh.repos.UserRepository;
-import com.tekup.project_erh.security.EmailService;
 
 @Service
 public class UserServicesImpl implements UserServices {
@@ -20,10 +20,7 @@ public class UserServicesImpl implements UserServices {
 	private UserRepository userRepository;
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	@Autowired
-	private SessionServices sessionServices;
-	@Autowired
-	private EmailService emailService;
+
 	
 	@Override
 	public User saveUser(User user) {
@@ -35,19 +32,7 @@ public class UserServicesImpl implements UserServices {
 		String password = passwordEncoder.encode(user.getPassword());
 		user.setPassword(password);
 		user.setActivated(true);
-		
 		Optional<User> savedUser = Optional.of(userRepository.save(user));
-		
-		savedUser.ifPresent(u -> {
-			try {
-				String token = UUID.randomUUID().toString();
-				sessionServices.save(u, token);
-			//	emailService.sendHtmlMail(user);
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-		});
 		return savedUser.get();
 	}
 	
@@ -62,8 +47,8 @@ public class UserServicesImpl implements UserServices {
 	}
 
 	@Override
-	public void deleteUser(User U) {
-		userRepository.delete(U);
+	public void deleteUser(Long U) {
+		userRepository.deleteById(U);
 		
 	}
 

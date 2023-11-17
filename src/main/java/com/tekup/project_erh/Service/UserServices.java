@@ -6,7 +6,7 @@ import com.tekup.project_erh.model.User;
 
 public interface UserServices {
     User saveUser(User U);
-    void deleteUser(User U);
+    void deleteUser(Long U);
     User getUser(Long id);
     List<User> getAllUsers();
     List<User> findActivatedUsers(boolean activated);

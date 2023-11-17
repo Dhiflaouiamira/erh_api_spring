@@ -47,13 +47,11 @@ public class Project {
     @OneToMany(mappedBy= "project")
 	private List<Activity> activitys;
     
+    @OneToMany(mappedBy= "project")
+	private List<User> users;
 	
-	
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_user", referencedColumnName = "id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
+    
+   
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_entreprise", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -75,13 +73,7 @@ public class Project {
 		this.activitys = activitys;
 	}
 
-	public User getUser() {
-		return user;
-	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 	public Entreprise getEntreprise() {
 		return entreprise;

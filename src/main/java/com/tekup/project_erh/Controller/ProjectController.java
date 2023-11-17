@@ -6,6 +6,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,31 +14,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tekup.project_erh.Service.PaymentServices;
-import com.tekup.project_erh.model.Payment;
+import com.tekup.project_erh.Service.ProjectServices;
+import com.tekup.project_erh.model.Project;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 
 @RestController
-@RequestMapping({"/api/payment"})
+@RequestMapping({"/api/projects"})
 
-public class PaymentController {
+public class ProjectController {
 	@Autowired
-	private PaymentServices paymentServices;
+	private ProjectServices projectServices;
 	
 	
 	@GetMapping
-	public List<Payment> getALLPayment(){
-		return paymentServices.getAllPayment();
+	public List<Project> getALLProject(){
+		return projectServices.getAllProject();
 }
 	
 	@PostMapping
-	public Payment AddPayment(@RequestBody Payment P) {
-		return paymentServices.savePayment(P);
+	public Project AddProject(@RequestBody Project P) {
+		return projectServices.saveProject(P);
 }
 
       
     @DeleteMapping
-    public void DeletePayment(@RequestBody Payment P) {
-    	paymentServices.deletePayment(P);
+    public void DeleteProject(@RequestBody Project P) {
+    	projectServices.deleteProject(P);
     }
 }

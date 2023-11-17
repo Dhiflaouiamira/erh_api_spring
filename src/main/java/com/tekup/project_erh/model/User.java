@@ -1,6 +1,7 @@
 package com.tekup.project_erh.model;
 
 import java.util.Collection;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -25,23 +28,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 
-
 @Entity
 @Table(name = "T_User")
+
 public class User  implements UserDetails{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-    
+	@NotBlank(message = "Le nom de famille ne peut pas être vide")
 	@Column(name = "first_name")
     private String firstName;
 	
 	@Column(name = "last_name")
     private String lastName;
 	
-	@Column(name = "email")
+	@Column(name = "email", unique = true)
+
     private String email;
 	
 	@Column(name = "password")
@@ -80,16 +84,16 @@ public class User  implements UserDetails{
 	@OneToMany(mappedBy= "user")
 	private List<Absence> absences;
 	
-	@OneToMany(mappedBy= "user")
-	private List<Project> projects;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="id_project", referencedColumnName = "id")
+	private Project project;
 	
 	@OneToMany(mappedBy= "user")
 	private List<Payment> payments;
 
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_entreprise", referencedColumnName = "id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "id_entreprise")
     private Entreprise entreprise;
 	  
 	public User() {
@@ -185,13 +189,7 @@ public class User  implements UserDetails{
 		this.absences = absences;
 	}
 
-	public List<Project> getProjects() {
-		return projects;
-	}
 
-	public void setProjects(List<Project> projects) {
-		this.projects = projects;
-	}
 
 	public List<Payment> getPayments() {
 		return payments;

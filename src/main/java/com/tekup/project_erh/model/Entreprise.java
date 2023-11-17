@@ -11,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.CascadeType;
 import java.time.LocalDate;  // Import LocalDate from java.time package
 
@@ -61,7 +64,8 @@ public class Entreprise {
     @Column(name = "domaine_activite")
     private String domaineActivite;
     
-    @OneToMany(mappedBy = "entreprise", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "entreprise")
+    @JsonIgnore
     private List<User> users;
 	
     @OneToMany(mappedBy = "entreprise", cascade = CascadeType.ALL)
